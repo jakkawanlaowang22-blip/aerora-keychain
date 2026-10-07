@@ -1,215 +1,25 @@
 <!DOCTYPE html>
-<html lang="th">
+<html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>AERORA | Find Keychain</title>
-
-<style>
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #f4f4f4;
-    color: #222;
-}
-
-.container {
-    max-width: 430px;
-    margin: auto;
-    padding: 30px 20px;
-}
-
-.logo {
-    text-align: center;
-    font-size: 40px;
-    font-weight: bold;
-    letter-spacing: 5px;
-    margin: 20px 0 5px;
-}
-
-.subtitle {
-    text-align: center;
-    color: #777;
-    margin-bottom: 30px;
-}
-
-.card {
-    background: white;
-    padding: 25px 20px;
-    border-radius: 20px;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
-}
-
-h2 {
-    text-align: center;
-}
-
-label {
-    display: block;
-    margin-top: 20px;
-    margin-bottom: 7px;
-    font-weight: bold;
-}
-
-input {
-    width: 100%;
-    padding: 14px;
-    box-sizing: border-box;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    font-size: 16px;
-}
-
-button {
-    width: 100%;
-    margin-top: 25px;
-    padding: 15px;
-    border: none;
-    border-radius: 10px;
-    background: #111;
-    color: white;
-    font-size: 17px;
-    font-weight: bold;
-}
-
-#message {
-    margin-top: 20px;
-    padding: 15px;
-    border-radius: 10px;
-    display: none;
-    line-height: 1.6;
-}
-</style>
+<title>AERORA Test</title>
 </head>
 
 <body>
 
-<div class="container">
+<h1>AERORA</h1>
 
-    <div class="logo">AERORA</div>
+<input id="code" placeholder="AR001">
 
-    <div class="subtitle">
-        Aviation Keychain
-    </div>
-
-    <div class="card">
-
-        <h2>🔎 ค้นหาเจ้าของพวงกุญแจ</h2>
-
-        <label>Keychain Code</label>
-
-        <input
-            id="code"
-            type="text"
-            placeholder="เช่น AR001"
-        >
-
-        <button onclick="alert('ปุ่มค้นหาทำงานแล้ว')">
-    ค้นหา
+<button onclick="testButton()">
+ค้นหา
 </button>
 
-        <div id="message"></div>
-
-    </div>
-
-</div>
-
 <script>
-
-const SUPABASE_URL =
-"https://twiomyfacdgrszhejrsq.supabase.co";
-
-const SUPABASE_KEY =”sb_publishable_vFbpyfTND-hsbf0c8gtk1Q_vQXiRyWE“;
-"ใส่_Publishable_Key_ของเพื่อนตรงนี้";
-
-
-async function findOwner() {
-
-    const code = document
-        .getElementById("code")
-        .value
-        .trim()
-        .toUpperCase();
-
-    const message =
-        document.getElementById("message");
-
-    message.style.display = "block";
-
-    if (!code) {
-
-        message.innerHTML =
-            "❌ กรุณากรอกรหัสพวงกุญแจ";
-
-        return;
-    }
-
-    message.innerHTML =
-        "⏳ กำลังค้นหา...";
-
-    try {
-
-        const response = await fetch(
-            SUPABASE_URL +
-            "/rest/v1/Owners?code=eq." +
-            encodeURIComponent(code),
-            {
-                method: "GET",
-
-                headers: {
-                    "apikey": SUPABASE_KEY
-                }
-            }
-        );
-
-        const data = await response.json();
-
-        if (!response.ok) {
-
-            message.innerHTML =
-                "❌ เกิดข้อผิดพลาด<br><br>" +
-                JSON.stringify(data);
-
-            return;
-        }
-
-        if (data.length === 0) {
-
-            message.innerHTML =
-                "❌ ไม่พบพวงกุญแจรหัส " +
-                "<strong>" + code + "</strong>";
-
-            return;
-        }
-
-        const owner = data[0];
-
-        message.innerHTML = `
-            <strong>✅ พบพวงกุญแจ!</strong>
-            <br><br>
-
-            รหัส:
-            <strong>${owner.code}</strong>
-
-            <br><br>
-
-            เจ้าของ:
-            <strong>${owner.owner_name}</strong>
-
-            <br><br>
-
-            ช่องทางติดต่อ:
-            <strong>${owner.contact}</strong>
-        `;
-
-    } catch (error) {
-
-        message.innerHTML =
-            "❌ ไม่สามารถเชื่อมต่อฐานข้อมูลได้";
-    }
+function testButton() {
+    alert("ปุ่มค้นหาทำงานแล้ว");
 }
-
 </script>
 
 </body>
