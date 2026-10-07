@@ -160,19 +160,50 @@ function findKeychain() {
     const result = document
         .getElementById("result");
 
+    if (code === "") {
+        result.style.display = "block";
+
+        result.innerHTML = `
+            ⚠️ กรุณาใส่รหัสพวงกุญแจ
+            <br><br>
+            ตัวอย่าง: <strong>AR001</strong>
+        `;
+
+        return;
+    }
+
     if (code === "AR001") {
 
         result.style.display = "block";
 
         result.innerHTML = `
-            <strong>พบข้อมูลพวงกุญแจ ✅</strong>
+            <strong>✅ พบข้อมูลพวงกุญแจ</strong>
             <br><br>
-            รหัสพวงกุญแจ: <strong>AR001</strong>
+
+            รหัสพวงกุญแจ:
+            <strong>AR001</strong>
+
             <br>
-            สถานะ: ลงทะเบียนแล้ว
+
+            สถานะ:
+            <strong>ลงทะเบียนแล้ว</strong>
+
             <br><br>
-            หากคุณพบพวงกุญแจชิ้นนี้
-            กรุณาติดต่อ AERORA เพื่อส่งคืนเจ้าของ
+
+            🎉 ขอบคุณที่ช่วยตามหาพวงกุญแจให้เจ้าของ
+
+            <br><br>
+
+            กรุณาติดต่อ AERORA
+            เพื่อประสานงานส่งคืนเจ้าของ
+
+            <br><br>
+
+            <strong>ช่องทางติดต่อ</strong>
+            <br>
+            Instagram: @AERORA
+            <br>
+            LINE: AERORA
         `;
 
     } else {
@@ -180,15 +211,14 @@ function findKeychain() {
         result.style.display = "block";
 
         result.innerHTML = `
-            ❌ ไม่พบรหัส <strong>${code}</strong>
+            ❌ ไม่พบรหัส
+            <strong>${code}</strong>
+
             <br><br>
+
             กรุณาตรวจสอบรหัสบนพวงกุญแจอีกครั้ง
         `;
-
     }
 }
 
 </script>
-
-</body>
-</html>
