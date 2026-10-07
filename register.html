@@ -186,8 +186,8 @@ async function registerKeychain() {
             console.log(error);
 
             message.innerHTML =
-                "❌ ลงทะเบียนไม่สำเร็จ<br><br>" +
-                "อาจเกิดจากรหัสซ้ำ หรือการตั้งค่าฐานข้อมูล";
+    "❌ ลงทะเบียนไม่สำเร็จ<br><br>" +
+    "Error: " + error;
 
             return;
         }
