@@ -4,13 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>AERORA | Owner Registration</title>
+<title>AERORA | Register Keychain</title>
 
 <style>
-* {
-    box-sizing: border-box;
-}
-
 body {
     margin: 0;
     font-family: Arial, sans-serif;
@@ -21,55 +17,48 @@ body {
 .container {
     max-width: 430px;
     margin: auto;
-    padding: 25px 20px 40px;
+    padding: 30px 20px;
 }
 
 .logo {
     text-align: center;
-    font-size: 42px;
-    font-weight: 800;
-    letter-spacing: 6px;
-    margin-top: 25px;
+    font-size: 40px;
+    font-weight: bold;
+    letter-spacing: 5px;
+    margin: 20px 0 5px;
 }
 
-.tagline {
+.subtitle {
     text-align: center;
     color: #777;
-    margin-top: 5px;
-    margin-bottom: 35px;
+    margin-bottom: 30px;
 }
 
 .card {
     background: white;
-    border-radius: 24px;
-    padding: 28px 22px;
+    padding: 25px 20px;
+    border-radius: 20px;
     box-shadow: 0 8px 30px rgba(0,0,0,0.08);
 }
 
 h2 {
-    margin-top: 0;
     text-align: center;
-}
-
-.description {
-    text-align: center;
-    color: #777;
-    line-height: 1.6;
 }
 
 label {
     display: block;
     margin-top: 20px;
-    margin-bottom: 8px;
+    margin-bottom: 7px;
     font-weight: bold;
 }
 
 input {
     width: 100%;
-    padding: 15px;
+    padding: 14px;
+    box-sizing: border-box;
     border: 1px solid #ccc;
-    border-radius: 12px;
-    font-size: 17px;
+    border-radius: 10px;
+    font-size: 16px;
 }
 
 button {
@@ -77,27 +66,19 @@ button {
     margin-top: 25px;
     padding: 15px;
     border: none;
-    border-radius: 12px;
+    border-radius: 10px;
     background: #111;
     color: white;
     font-size: 17px;
     font-weight: bold;
 }
 
-.message {
-    display: none;
+#message {
     margin-top: 20px;
-    padding: 18px;
-    background: #f5f5f5;
-    border-radius: 15px;
-    line-height: 1.7;
-}
-
-.footer {
-    text-align: center;
-    margin-top: 30px;
-    color: #888;
-    font-size: 13px;
+    padding: 15px;
+    border-radius: 10px;
+    display: none;
+    line-height: 1.6;
 }
 </style>
 </head>
@@ -108,67 +89,45 @@ button {
 
     <div class="logo">AERORA</div>
 
-    <div class="tagline">
+    <div class="subtitle">
         Aviation Keychain
     </div>
 
     <div class="card">
 
-        <h2>🔑 Owner Registration</h2>
+        <h2>✈️ ลงทะเบียนพวงกุญแจ</h2>
 
-        <p class="description">
-            ลงทะเบียนพวงกุญแจ AERORA
-            <br>
-            เพื่อช่วยให้สามารถติดต่อคุณได้หากมีผู้พบ
-        </p>
+        <label>Keychain Code</label>
+        <input id="code" type="text" placeholder="เช่น AR001">
 
-        <label for="code">
-            Keychain Code
-        </label>
+        <label>ชื่อเจ้าของ</label>
+        <input id="owner_name" type="text" placeholder="ชื่อของคุณ">
 
-        <input
-            id="code"
-            type="text"
-            placeholder="เช่น AR001"
-        >
+        <label>ช่องทางติดต่อ</label>
+        <input id="contact" type="text" placeholder="เช่น LINE / Instagram">
 
-        <label for="name">
-            ชื่อเจ้าของ
-        </label>
-
-        <input
-            id="name"
-            type="text"
-            placeholder="ชื่อเล่นหรือชื่อที่ต้องการใช้"
-        >
-
-        <label for="contact">
-            ช่องทางติดต่อ
-        </label>
-
-        <input
-            id="contact"
-            type="text"
-            placeholder="เช่น Instagram / LINE"
-        >
-
-        <button onclick="registerOwner()">
+        <button onclick="registerKeychain()">
             ลงทะเบียน
         </button>
 
-        <div class="message" id="message"></div>
+        <div id="message"></div>
 
-    </div>
-
-    <div class="footer">
-        © 2026 AERORA Aviation Keychain
     </div>
 
 </div>
 
 <script>
 
-function registerOwner() {
+const SUPABASE_URL = "https://twiomyfacdgrszhej.supabase.co";
+
+/*
+  ใส่ Publishable key ของเพื่อนตรงนี้
+  แทนคำว่า YOUR_PUBLISHABLE_KEY
+*/
+const SUPABASE_KEY = "sb_publishable_vFbpyfTND-hsbf0c8gtk1Q_vQXiRyWE";
+
+
+async function registerKeychain() {
 
     const code = document
         .getElementById("code")
@@ -176,8 +135,8 @@ function registerOwner() {
         .trim()
         .toUpperCase();
 
-    const name = document
-        .getElementById("name")
+    const owner_name = document
+        .getElementById("owner_name")
         .value
         .trim();
 
@@ -189,55 +148,68 @@ function registerOwner() {
     const message = document
         .getElementById("message");
 
-    if (code === "" || name === "" || contact === "") {
-
-        message.style.display = "block";
-
-        message.innerHTML = `
-            ⚠️ กรุณากรอกข้อมูลให้ครบทุกช่อง
-        `;
-
-        return;
-    }
-
-    if (code !== "AR001") {
-
-        message.style.display = "block";
-
-        message.innerHTML = `
-            ❌ ไม่พบรหัส <strong>${code}</strong>
-            <br><br>
-            กรุณาตรวจสอบรหัสพวงกุญแจอีกครั้ง
-        `;
-
-        return;
-    }
-
     message.style.display = "block";
 
-    message.innerHTML = `
-        <strong>✅ ลงทะเบียนสำเร็จ</strong>
-        <br><br>
+    if (!code || !owner_name || !contact) {
 
-        รหัสพวงกุญแจ:
-        <strong>${code}</strong>
+        message.innerHTML =
+            "❌ กรุณากรอกข้อมูลให้ครบทุกช่อง";
 
-        <br>
+        return;
+    }
 
-        เจ้าของ:
-        <strong>${name}</strong>
+    try {
 
-        <br>
+        const response = await fetch(
+            SUPABASE_URL + "/rest/v1/owners",
+            {
+                method: "POST",
 
-        ช่องทางติดต่อ:
-        <strong>${contact}</strong>
+                headers: {
+                    "Content-Type": "application/json",
+                    "apikey": SUPABASE_KEY,
+                    "Authorization": "Bearer " + SUPABASE_KEY,
+                    "Prefer": "return=minimal"
+                },
 
-        <br><br>
+                body: JSON.stringify({
+                    code: code,
+                    owner_name: owner_name,
+                    contact: contact
+                })
+            }
+        );
 
-        ⚠️ หมายเหตุ:
-        ข้อมูลนี้ยังเป็นการทดลองบนเว็บไซต์
-        ข้อมูลยังไม่ได้ถูกบันทึกลงฐานข้อมูลออนไลน์
-    `;
+        if (!response.ok) {
+
+            const error = await response.text();
+
+            console.log(error);
+
+            message.innerHTML =
+                "❌ ลงทะเบียนไม่สำเร็จ<br><br>" +
+                "อาจเกิดจากรหัสซ้ำ หรือการตั้งค่าฐานข้อมูล";
+
+            return;
+        }
+
+        message.innerHTML = `
+            <strong>✅ ลงทะเบียนสำเร็จ!</strong>
+            <br><br>
+            รหัสพวงกุญแจ: <strong>${code}</strong>
+            <br>
+            เจ้าของ: ${owner_name}
+            <br><br>
+            ข้อมูลถูกบันทึกเข้าสู่ระบบ AERORA แล้ว
+        `;
+
+    } catch (error) {
+
+        console.log(error);
+
+        message.innerHTML =
+            "❌ ไม่สามารถเชื่อมต่อฐานข้อมูลได้";
+    }
 }
 
 </script>
