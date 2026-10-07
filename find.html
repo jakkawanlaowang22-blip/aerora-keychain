@@ -1,26 +1,379 @@
 <!DOCTYPE html>
-<html>
+
+<html lang="th">
+
 <head>
+
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AERORA Test</title>
+
+<title>AERORA - Find Keychain</title>
+
+<style>
+
+body {
+
+    margin: 0;
+
+    font-family: Arial, sans-serif;
+
+    background: linear-gradient(135deg, #f5f5f5, #dcdcdc);
+
+    min-height: 100vh;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+}
+
+.container {
+
+    width: 90%;
+
+    max-width: 450px;
+
+    text-align: center;
+
+}
+
+.logo {
+
+    font-size: 42px;
+
+    font-weight: bold;
+
+    letter-spacing: 6px;
+
+    color: #111;
+
+    margin-bottom: 5px;
+
+}
+
+.subtitle {
+
+    color: #666;
+
+    margin-bottom: 25px;
+
+}
+
+.card {
+
+    background: white;
+
+    padding: 30px 25px;
+
+    border-radius: 20px;
+
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+
+}
+
+h2 {
+
+    margin-top: 0;
+
+    margin-bottom: 25px;
+
+}
+
+label {
+
+    display: block;
+
+    text-align: left;
+
+    margin-top: 15px;
+
+    margin-bottom: 7px;
+
+    font-weight: bold;
+
+}
+
+input {
+
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 14px;
+
+    border: 1px solid #ccc;
+
+    border-radius: 10px;
+
+    font-size: 17px;
+
+}
+
+button {
+
+    width: 100%;
+
+    margin-top: 20px;
+
+    padding: 14px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: #111;
+
+    color: white;
+
+    font-size: 18px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+}
+
+button:active {
+
+    transform: scale(0.98);
+
+}
+
+#message {
+
+    margin-top: 20px;
+
+    padding: 15px;
+
+    border-radius: 10px;
+
+    background: #f5f5f5;
+
+    line-height: 1.6;
+
+    display: none;
+
+}
+
+</style>
+
 </head>
 
 <body>
 
-<h1>AERORA</h1>
+<div class="container">
 
-<input id="code" placeholder="AR001">
+    <div class="logo">AERORA</div>
 
-<button onclick="testButton()">
-ค้นหา
-</button>
+    <div class="subtitle">
+
+        Aviation Keychain
+
+    </div>
+
+    <div class="card">
+
+        <h2>🔎 ค้นหาเจ้าของพวงกุญแจ</h2>
+
+        <label>Keychain Code</label>
+
+        <input
+
+            id="code"
+
+            type="text"
+
+            placeholder="เช่น AR001"
+
+            autocomplete="off"
+
+        >
+
+        <button onclick="findOwner()">
+
+            ค้นหา
+
+        </button>
+
+        <div id="message"></div>
+
+    </div>
+
+</div>
 
 <script>
-function testButton() {
-    alert("ปุ่มค้นหาทำงานแล้ว");
+
+/* =========================
+
+   SUPABASE
+
+========================= */
+
+const SUPABASE_URL =
+
+"https://twiomyfacdgrszhejrsq.supabase.co";
+
+/*
+
+   เอา Publishable Key ของเพื่อน
+
+   มาใส่แทนข้อความด้านล่าง
+
+*/
+
+const SUPABASE_KEY =”sb_publishable_vFbpyfTND-hsbf0c8gtk1Q_vQXiRyWE“;
+
+"ใส่ Publishable Key ของเพื่อนตรงนี้";
+
+/* =========================
+
+   FIND OWNER
+
+========================= */
+
+async function findOwner() {
+
+    const codeInput =
+
+        document.getElementById("code");
+
+    const message =
+
+        document.getElementById("message");
+
+    const code =
+
+        codeInput.value.trim().toUpperCase();
+
+    message.style.display = "block";
+
+    /* ตรวจว่ากรอกรหัสหรือยัง */
+
+    if (!code) {
+
+        message.innerHTML =
+
+            "❌ กรุณากรอกรหัสพวงกุญแจ";
+
+        return;
+
+    }
+
+    message.innerHTML =
+
+        "⏳ กำลังค้นหาข้อมูล...";
+
+    try {
+
+        const response = await fetch(
+
+            SUPABASE_URL +
+
+            "/rest/v1/Owners?code=eq." +
+
+            encodeURIComponent(code),
+
+            {
+
+                method: "GET",
+
+                headers: {
+
+                    "apikey": SUPABASE_KEY
+
+                }
+
+            }
+
+        );
+
+        const data =
+
+            await response.json();
+
+        /* ถ้า Supabase แจ้ง Error */
+
+        if (!response.ok) {
+
+            message.innerHTML =
+
+                "❌ เกิดข้อผิดพลาด" +
+
+                "<br><br>" +
+
+                "Error: " +
+
+                JSON.stringify(data);
+
+            return;
+
+        }
+
+        /* ถ้าไม่พบรหัส */
+
+        if (data.length === 0) {
+
+            message.innerHTML =
+
+                "❌ ไม่พบพวงกุญแจรหัส " +
+
+                "<strong>" +
+
+                code +
+
+                "</strong>";
+
+            return;
+
+        }
+
+        /* พบข้อมูล */
+
+        const owner = data[0];
+
+        message.innerHTML = `
+
+            <strong>✅ พบพวงกุญแจ!</strong>
+
+            <br><br>
+
+            รหัสพวงกุญแจ:
+
+            <strong>${owner.code}</strong>
+
+            <br><br>
+
+            เจ้าของ:
+
+            <strong>${owner.owner_name}</strong>
+
+            <br><br>
+
+            ช่องทางติดต่อ:
+
+            <strong>${owner.contact}</strong>
+
+        `;
+
+    } catch (error) {
+
+        message.innerHTML =
+
+            "❌ ไม่สามารถเชื่อมต่อฐานข้อมูลได้" +
+
+            "<br><br>" +
+
+            error.message;
+
+    }
+
 }
+
 </script>
 
 </body>
+
 </html>
