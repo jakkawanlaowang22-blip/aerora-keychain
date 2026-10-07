@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>AERORA | Owner Registration</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f4f4;
+    color: #222;
+}
+
+.container {
+    max-width: 430px;
+    margin: auto;
+    padding: 25px 20px 40px;
+}
+
+.logo {
+    text-align: center;
+    font-size: 42px;
+    font-weight: 800;
+    letter-spacing: 6px;
+    margin-top: 25px;
+}
+
+.tagline {
+    text-align: center;
+    color: #777;
+    margin-top: 5px;
+    margin-bottom: 35px;
+}
+
+.card {
+    background: white;
+    border-radius: 24px;
+    padding: 28px 22px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+}
+
+h2 {
+    margin-top: 0;
+    text-align: center;
+}
+
+.description {
+    text-align: center;
+    color: #777;
+    line-height: 1.6;
+}
+
+label {
+    display: block;
+    margin-top: 20px;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+input {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    font-size: 17px;
+}
+
+button {
+    width: 100%;
+    margin-top: 25px;
+    padding: 15px;
+    border: none;
+    border-radius: 12px;
+    background: #111;
+    color: white;
+    font-size: 17px;
+    font-weight: bold;
+}
+
+.message {
+    display: none;
+    margin-top: 20px;
+    padding: 18px;
+    background: #f5f5f5;
+    border-radius: 15px;
+    line-height: 1.7;
+}
+
+.footer {
+    text-align: center;
+    margin-top: 30px;
+    color: #888;
+    font-size: 13px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="logo">AERORA</div>
+
+    <div class="tagline">
+        Aviation Keychain
+    </div>
+
+    <div class="card">
+
+        <h2>🔑 Owner Registration</h2>
+
+        <p class="description">
+            ลงทะเบียนพวงกุญแจ AERORA
+            <br>
+            เพื่อช่วยให้สามารถติดต่อคุณได้หากมีผู้พบ
+        </p>
+
+        <label for="code">
+            Keychain Code
+        </label>
+
+        <input
+            id="code"
+            type="text"
+            placeholder="เช่น AR001"
+        >
+
+        <label for="name">
+            ชื่อเจ้าของ
+        </label>
+
+        <input
+            id="name"
+            type="text"
+            placeholder="ชื่อเล่นหรือชื่อที่ต้องการใช้"
+        >
+
+        <label for="contact">
+            ช่องทางติดต่อ
+        </label>
+
+        <input
+            id="contact"
+            type="text"
+            placeholder="เช่น Instagram / LINE"
+        >
+
+        <button onclick="registerOwner()">
+            ลงทะเบียน
+        </button>
+
+        <div class="message" id="message"></div>
+
+    </div>
+
+    <div class="footer">
+        © 2026 AERORA Aviation Keychain
+    </div>
+
+</div>
+
+<script>
+
+function registerOwner() {
+
+    const code = document
+        .getElementById("code")
+        .value
+        .trim()
+        .toUpperCase();
+
+    const name = document
+        .getElementById("name")
+        .value
+        .trim();
+
+    const contact = document
+        .getElementById("contact")
+        .value
+        .trim();
+
+    const message = document
+        .getElementById("message");
+
+    if (code === "" || name === "" || contact === "") {
+
+        message.style.display = "block";
+
+        message.innerHTML = `
+            ⚠️ กรุณากรอกข้อมูลให้ครบทุกช่อง
+        `;
+
+        return;
+    }
+
+    if (code !== "AR001") {
+
+        message.style.display = "block";
+
+        message.innerHTML = `
+            ❌ ไม่พบรหัส <strong>${code}</strong>
+            <br><br>
+            กรุณาตรวจสอบรหัสพวงกุญแจอีกครั้ง
+        `;
+
+        return;
+    }
+
+    message.style.display = "block";
+
+    message.innerHTML = `
+        <strong>✅ ลงทะเบียนสำเร็จ</strong>
+        <br><br>
+
+        รหัสพวงกุญแจ:
+        <strong>${code}</strong>
+
+        <br>
+
+        เจ้าของ:
+        <strong>${name}</strong>
+
+        <br>
+
+        ช่องทางติดต่อ:
+        <strong>${contact}</strong>
+
+        <br><br>
+
+        ⚠️ หมายเหตุ:
+        ข้อมูลนี้ยังเป็นการทดลองบนเว็บไซต์
+        ข้อมูลยังไม่ได้ถูกบันทึกลงฐานข้อมูลออนไลน์
+    `;
+}
+
+</script>
+
+</body>
+</html>
