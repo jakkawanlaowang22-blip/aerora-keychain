@@ -234,143 +234,72 @@ const SUPABASE_KEY =
 ========================= */
 
 async function findOwner() {
+    const codeInput = document.getElementById("code");
+    const message = document.getElementById("message");
 
-    const codeInput =
-
-        document.getElementById("code");
-
-    const message =
-
-        document.getElementById("message");
-
-    const code =
-
-        codeInput.value.trim().toUpperCase();
+    const code = codeInput.value.trim().toUpperCase();
 
     message.style.display = "block";
 
-    /* ตรวจว่ากรอกรหัสหรือยัง */
-
     if (!code) {
-
-        message.innerHTML =
-
-            "❌ กรุณากรอกรหัสพวงกุญแจ";
-
+        message.innerHTML = "❌ กรุณากรอกรหัสพวงกุญแจ";
         return;
-
     }
 
-    message.innerHTML =
-
-        "⏳ กำลังค้นหาข้อมูล...";
+    message.innerHTML = "⏳ กำลังค้นหาข้อมูล...";
 
     try {
-
-        const response = await fetch(
-
+        const url =
             SUPABASE_URL +
+            "/rest/v1/Owners?select=code,owner_name,contact&code=eq." +
+            encodeURIComponent(code);
 
-            "/rest/v1/Owners?code=eq." +
-
-            encodeURIComponent(code),
-
-            {
-
-                method: "GET",
-
-                headers: {
-
-                    "apikey": SUPABASE_KEY
-
-                }
-
+        const response = await fetch(url, {
+            method: "GET",
+            headers: {
+                "apikey": SUPABASE_KEY,
+                "Authorization": "Bearer " + SUPABASE_KEY,
+                "Accept": "application/json"
             }
+        });
 
-        );
-
-        const data =
-
-            await response.json();
-
-        /* ถ้า Supabase แจ้ง Error */
+        const data = await response.json();
 
         if (!response.ok) {
-
             message.innerHTML =
-
-                "❌ เกิดข้อผิดพลาด" +
-
-                "<br><br>" +
-
-                "Error: " +
-
+                "❌ เกิดข้อผิดพลาด<br><br>" +
                 JSON.stringify(data);
-
             return;
-
         }
 
-        /* ถ้าไม่พบรหัส */
-
-        if (data.length === 0) {
-
+        if (!Array.isArray(data) || data.length === 0) {
             message.innerHTML =
-
-                "❌ ไม่พบพวงกุญแจรหัส " +
-
-                "<strong>" +
-
-                code +
-
-                "</strong>";
-
+                "❌ ไม่พบพวงกุญแจรหัส <strong>" +
+                code + "</strong>";
             return;
-
         }
-
-        /* พบข้อมูล */
 
         const owner = data[0];
 
         message.innerHTML = `
-
             <strong>✅ พบพวงกุญแจ!</strong>
-
             <br><br>
-
             รหัสพวงกุญแจ:
-
             <strong>${owner.code}</strong>
-
             <br><br>
-
             เจ้าของ:
-
             <strong>${owner.owner_name}</strong>
-
             <br><br>
-
             ช่องทางติดต่อ:
-
             <strong>${owner.contact}</strong>
-
         `;
 
     } catch (error) {
-
         message.innerHTML =
-
-            "❌ ไม่สามารถเชื่อมต่อฐานข้อมูลได้" +
-
-            "<br><br>" +
-
+            "❌ ไม่สามารถเชื่อมต่อฐานข้อมูลได้<br><br>" +
             error.message;
-
     }
-
 }
-
 </script>
 
 </body>
